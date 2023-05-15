@@ -2,6 +2,8 @@ import { fetchImages} from '../Api';
 import { Component } from 'react';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
+import { Button } from './Button/Button';
+import { Loader } from './Loader/Loader';
 
 export class App extends Component {
 
@@ -11,6 +13,7 @@ export class App extends Component {
     isLoading: false,
     searchQuery: '',
     error: null,
+    page: 1,
   };
 
 
@@ -18,15 +21,26 @@ export class App extends Component {
     event.preventDefault();
 
     this.setState({ isLoading: true });
+    this.setState({ isLoading: true, images: [], page: 1 });
+    this.fetchImagesWithQuery(this.state.searchQuery, 1);
+    };
 
-    fetchImages(this.state.searchQuery)
+  handleLoadMore = () => {
+    const nextPage = this.state.page + 1;
+    this.fetchImagesWithQuery(this.state.searchQuery, nextPage);
+  };
+
+  fetchImagesWithQuery = (searchQuery, page) => {
+    fetchImages(searchQuery, page)
       .then((images) => {
-        this.setState({ images });
-        console.log(images);
+        this.setState((prevState) => ({
+          images: [...prevState.images, ...images],
+          page: page,
+        }));
       })
       .catch((error) => {
         this.setState({ error });
-        console.log(error)
+        console.log(error);
       })
       .finally(() => {
         this.setState({ isLoading: false });
@@ -38,13 +52,16 @@ export class App extends Component {
     };
 
   render() {
+ 
+    const { images, isLoading } = this.state;
+
     return (
       <>
         <Searchbar onSubmit={this.handleOnSubmit} onChange={this.handleOnChange}></Searchbar>
-        <ImageGallery images={this.state.images}></ImageGallery>
-        {/* <Button></Button>
+        <ImageGallery images={images}></ImageGallery>
+        {images.length > 0 && !isLoading && <Button onClick={this.handleLoadMore} />}
         <Loader></Loader>
-        <Modal></Modal> */}
+        {/* <Modal></Modal> */}
       </>  
     )
   }
