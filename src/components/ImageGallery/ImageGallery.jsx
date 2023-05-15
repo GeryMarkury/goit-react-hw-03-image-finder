@@ -1,4 +1,4 @@
-import css from 'styles.module.css';
+import css from '../../styles.module.css'
 import { ImageGalleryItem } from './ImageGalleryItem/ImageGalleryItem';
 
 export const ImageGallery = ({images}) => (<ul className={css.ImageGallery}>

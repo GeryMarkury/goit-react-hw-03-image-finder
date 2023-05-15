@@ -1,5 +1,5 @@
-import css from 'styles.module.css';
+import css from '../../../styles.module.css';
 
-export const ImageGalleryItem = ({webformatURL, largeImageURL}) => (<li className={css.ImageGalleryItem}>
-  <img src={webformatURL} alt="" />
+export const ImageGalleryItem = ({url, urlLarge}) => (<li className={css.ImageGalleryItem}>
+  <img src={url} alt="" />
 </li>)

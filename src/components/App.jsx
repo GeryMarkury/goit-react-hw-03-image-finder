@@ -13,27 +13,38 @@ export class App extends Component {
     error: null,
   };
 
-  async componentDidMount() {
+
+  handleOnSubmit = (event) => {
+    event.preventDefault();
+
     this.setState({ isLoading: true });
 
-    try {
-      const images = fetchImages("react");
-      this.setState({ images });
-    } catch (error) {
-      this.setState({ error });
-    } finally {
-      this.setState({ isLoading: false });
-    }
-  }
+    fetchImages(this.state.searchQuery)
+      .then((images) => {
+        this.setState({ images });
+        console.log(images);
+      })
+      .catch((error) => {
+        this.setState({ error });
+        console.log(error)
+      })
+      .finally(() => {
+        this.setState({ isLoading: false });
+      });
+  };
+
+   handleOnChange = event => {
+        this.setState({ searchQuery: event.currentTarget.value })
+    };
 
   render() {
     return (
       <>
-        <Searchbar onSubmit={onSubmit}></Searchbar>
+        <Searchbar onSubmit={this.handleOnSubmit} onChange={this.handleOnChange}></Searchbar>
         <ImageGallery images={this.state.images}></ImageGallery>
-        <Button></Button>
+        {/* <Button></Button>
         <Loader></Loader>
-        <Modal></Modal>
+        <Modal></Modal> */}
       </>  
     )
   }
